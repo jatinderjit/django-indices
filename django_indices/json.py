@@ -1,7 +1,7 @@
 from typing import List
 
 
-class JsonIndex:
+class JSONIndex:
     def __init__(self, field: List[str], name: str, unique=False, concurrently=True):
         self.field = field
         self.name = name

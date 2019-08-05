@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand
 from django.db import connections, transaction
 
-from json_index.models import Index
+from django_indices.models import Index
 
 
 class Command(BaseCommand):
@@ -12,7 +12,7 @@ class Command(BaseCommand):
         models = []
         for app, app_models in apps.all_models.items():
             for model in app_models.values():
-                if hasattr(model._meta, "json_indices"):
+                if hasattr(model._meta, "indices"):
                     models.append(model)
         self.cached_code_indices = self.code_indices(models)
         self.cached_db_indices = self.db_indices()
@@ -31,7 +31,7 @@ class Command(BaseCommand):
     def code_indices(models):
         indices = {}
         for model in models:
-            for idx in model._meta.json_indices:
+            for idx in model._meta.indices:
                 key = (model._meta.app_label, model.__name__, idx.name)
                 indices[key] = idx
         return indices
