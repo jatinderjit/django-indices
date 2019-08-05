@@ -5,13 +5,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="django-indices",
-    version="0.0.1",
+    version="0.0.2",
     author="Jatinderjit Singh",
     author_email="jatinderjit89@gmail.com",
     description="Create JSON indexes concurrently",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/django-indexes",
+    url="https://github.com/jatinderjit/django-indices",
     packages=setuptools.find_packages(),
     classifiers=[
         "Framework :: Django",
