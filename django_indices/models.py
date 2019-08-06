@@ -8,6 +8,12 @@ class Index(models.Model):
     name = models.TextField()
     unique = models.BooleanField()
     field = pg.JSONField()
+    where = pg.JSONField(null=True, blank=True)
 
     def get_structure(self):
-        return {"name": self.name, "fields": set(self.field), "unique": self.unique}
+        return {
+            "name": self.name,
+            "fields": set(self.field),
+            "unique": self.unique,
+            "where": set(self.where) if self.where else None,
+        }

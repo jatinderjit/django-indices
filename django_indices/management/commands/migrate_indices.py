@@ -58,7 +58,11 @@ class Command(BaseCommand):
         for k in code_keys & db_keys:
             code_index = code_indices[k]
             db_index = db_indices[k]
-            if code_index.get_structure() != db_index:
+            app_label, model_name, _ = k
+            ct = ContentType.objects.get(app_label=app_label, model=model_name.lower())
+            model = ct.model_class()
+
+            if code_index.get_structure(model) != db_index:
                 alter[k] = code_index
 
         return create, remove, alter
@@ -68,16 +72,16 @@ class Command(BaseCommand):
         app_label, model_name, idx_name = key
         ct = ContentType.objects.get(app_label=app_label, model=model_name.lower())
         model = ct.model_class()
-        query = idx.get_sql(model._meta.db_table)
+        query, params = idx.get_sql(model)
         if idx.concurrently:
-            self.exec(key, idx, query, True)
+            self.exec(key, idx, True, query, params)
         else:
-            self.exec_atomically(key, idx, query, True)
+            self.exec_atomically(key, idx, True, query, params)
 
     def remove_index(self, key, idx):
         print(f"Remove index {key}: {idx}")
         query = f"DROP INDEX CONCURRENTLY IF EXISTS {key[2]}"
-        self.exec(key, idx, query, False)
+        self.exec(key, idx, False, query)
 
     def alter_index(self, key, idx):
         print(f"Alter index {key}: {idx}")
@@ -85,19 +89,22 @@ class Command(BaseCommand):
         self.create_index(key, idx)
 
     @classmethod
-    def exec_atomically(cls, key, idx, query, create):
+    def exec_atomically(cls, key, idx, create, query, params=None):
         with transaction.atomic():
-            cls.exec(key, idx, query, create)
+            cls.exec(key, idx, create, query, params)
 
     @staticmethod
-    def exec(key, idx, query, create):
+    def exec(key, idx, create, query, params=None):
+        if params is None:
+            params = []
         print("executing:", query)
+        print("params:", params)
         app_label, model_name, idx_name = key
         ct = ContentType.objects.get(app_label=app_label, model=model_name.lower())
         with connections["default"].cursor() as cursor:
-            cursor.execute(query)
+            cursor.execute(query, params)
         if create:
-            fields = list(idx.get_structure()["fields"])
+            fields = list(idx.get_structure(ct.model_class())["fields"])
             Index.objects.create(
                 content_type=ct, name=idx_name, unique=idx.unique, field=fields
             )
