@@ -56,7 +56,7 @@ class JSONIndex:
                 CREATE {unique} INDEX {concurrently}
                 IF NOT EXISTS {self.name}
                 ON {model._meta.db_table} {fields}
-                {where}
+                {where or ""}
             """,
             params,
         )

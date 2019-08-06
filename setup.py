@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="django-indices",
-    version="0.0.3",
+    version="0.0.4",
     author="Jatinderjit Singh",
     author_email="jatinderjit89@gmail.com",
     description="Create JSON indexes concurrently",
@@ -16,7 +16,6 @@ setuptools.setup(
     classifiers=[
         "Framework :: Django",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
