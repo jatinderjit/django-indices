@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="django-indices",
-    version="0.0.4",
+    version="0.0.4.post1",
     author="Jatinderjit Singh",
     author_email="jatinderjit89@gmail.com",
     description="Create JSON indexes concurrently",
