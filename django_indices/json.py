@@ -63,7 +63,7 @@ class JSONIndex:
 
     @staticmethod
     def get_field(field: List[str]):
-        field = field[:]
+        field = list(field)
         for i, part in enumerate(field[1:], 1):
             field[i] = f"'{part}'"
         field = "->".join(field[:-1]) + "->>" + field[-1]
